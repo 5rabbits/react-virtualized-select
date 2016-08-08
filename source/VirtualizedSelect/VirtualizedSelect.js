@@ -32,6 +32,10 @@ export default class VirtualizedSelect extends Component {
     }
   }
 
+  selectValue (option) {
+    this.refs.select.selectValue(option)
+  }
+
   render () {
     const { async } = this.props
 
@@ -44,6 +48,7 @@ export default class VirtualizedSelect extends Component {
         {...this.props}
         menuRenderer={this._renderMenu}
         menuStyle={{ overflow: 'hidden' }}
+        ref='select'
       />
     )
   }
