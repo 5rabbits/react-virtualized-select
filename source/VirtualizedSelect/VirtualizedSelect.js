@@ -2,6 +2,7 @@
 import React, { Component, PropTypes } from 'react'
 import Select from 'react-select'
 import { AutoSizer, VirtualScroll } from 'react-virtualized'
+import ScrollLock from './ScrollLock'
 
 export default class VirtualizedSelect extends Component {
 
@@ -79,18 +80,20 @@ export default class VirtualizedSelect extends Component {
     return (
       <AutoSizer disableHeight>
         {({ width }) => (
-          <VirtualScroll
-            className='VirtualSelectGrid'
-            height={height}
-            ref={(ref) => this._virtualScroll = ref}
-            rowCount={options.length}
-            rowHeight={({ index }) => this._getOptionHeight({
-              option: options[index]
-            })}
-            rowRenderer={wrappedRowRenderer}
-            scrollToIndex={focusedOptionIndex}
-            width={width}
-          />
+          <ScrollLock>
+            <VirtualScroll
+              className='VirtualSelectGrid'
+              height={height}
+              ref={(ref) => this._virtualScroll = ref}
+              rowCount={options.length}
+              rowHeight={({ index }) => this._getOptionHeight({
+                option: options[index]
+              })}
+              rowRenderer={wrappedRowRenderer}
+              scrollToIndex={focusedOptionIndex}
+              width={width}
+            />
+          </ScrollLock>
         )}
       </AutoSizer>
     )
