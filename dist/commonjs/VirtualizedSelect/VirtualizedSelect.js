@@ -18,6 +18,10 @@ var _reactSelect2 = _interopRequireDefault(_reactSelect);
 
 var _reactVirtualized = require('react-virtualized');
 
+var _ScrollLock = require('./ScrollLock');
+
+var _ScrollLock2 = _interopRequireDefault(_ScrollLock);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -113,23 +117,27 @@ var VirtualizedSelect = function (_Component) {
         { disableHeight: true },
         function (_ref3) {
           var width = _ref3.width;
-          return _react2.default.createElement(_reactVirtualized.VirtualScroll, {
-            className: 'VirtualSelectGrid',
-            height: height,
-            ref: function ref(_ref5) {
-              return _this2._virtualScroll = _ref5;
-            },
-            rowCount: options.length,
-            rowHeight: function rowHeight(_ref4) {
-              var index = _ref4.index;
-              return _this2._getOptionHeight({
-                option: options[index]
-              });
-            },
-            rowRenderer: wrappedRowRenderer,
-            scrollToIndex: focusedOptionIndex,
-            width: width
-          });
+          return _react2.default.createElement(
+            _ScrollLock2.default,
+            null,
+            _react2.default.createElement(_reactVirtualized.VirtualScroll, {
+              className: 'VirtualSelectGrid',
+              height: height,
+              ref: function ref(_ref5) {
+                return _this2._virtualScroll = _ref5;
+              },
+              rowCount: options.length,
+              rowHeight: function rowHeight(_ref4) {
+                var index = _ref4.index;
+                return _this2._getOptionHeight({
+                  option: options[index]
+                });
+              },
+              rowRenderer: wrappedRowRenderer,
+              scrollToIndex: focusedOptionIndex,
+              width: width
+            })
+          );
         }
       );
     }

@@ -1,18 +1,7 @@
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _react = require('react');
-
-var _react2 = babelHelpers.interopRequireDefault(_react);
-
-var _reactSelect = require('react-select');
-
-var _reactSelect2 = babelHelpers.interopRequireDefault(_reactSelect);
-
-var _reactVirtualized = require('react-virtualized');
+import React, { Component, PropTypes } from 'react';
+import Select from 'react-select';
+import { AutoSizer, VirtualScroll } from 'react-virtualized';
+import ScrollLock from './ScrollLock';
 
 var VirtualizedSelect = function (_Component) {
   babelHelpers.inherits(VirtualizedSelect, _Component);
@@ -50,9 +39,9 @@ var VirtualizedSelect = function (_Component) {
       var async = this.props.async;
 
 
-      var SelectComponent = async ? _reactSelect2.default.Async : _reactSelect2.default;
+      var SelectComponent = async ? Select.Async : Select;
 
-      return _react2.default.createElement(SelectComponent, babelHelpers.extends({}, this.props, {
+      return React.createElement(SelectComponent, babelHelpers.extends({}, this.props, {
         menuRenderer: this._renderMenu,
         menuStyle: { overflow: 'hidden' },
         ref: 'select'
@@ -96,28 +85,32 @@ var VirtualizedSelect = function (_Component) {
         });
       }
 
-      return _react2.default.createElement(
-        _reactVirtualized.AutoSizer,
+      return React.createElement(
+        AutoSizer,
         { disableHeight: true },
         function (_ref3) {
           var width = _ref3.width;
-          return _react2.default.createElement(_reactVirtualized.VirtualScroll, {
-            className: 'VirtualSelectGrid',
-            height: height,
-            ref: function ref(_ref5) {
-              return _this2._virtualScroll = _ref5;
-            },
-            rowCount: options.length,
-            rowHeight: function rowHeight(_ref4) {
-              var index = _ref4.index;
-              return _this2._getOptionHeight({
-                option: options[index]
-              });
-            },
-            rowRenderer: wrappedRowRenderer,
-            scrollToIndex: focusedOptionIndex,
-            width: width
-          });
+          return React.createElement(
+            ScrollLock,
+            null,
+            React.createElement(VirtualScroll, {
+              className: 'VirtualSelectGrid',
+              height: height,
+              ref: function ref(_ref5) {
+                return _this2._virtualScroll = _ref5;
+              },
+              rowCount: options.length,
+              rowHeight: function rowHeight(_ref4) {
+                var index = _ref4.index;
+                return _this2._getOptionHeight({
+                  option: options[index]
+                });
+              },
+              rowRenderer: wrappedRowRenderer,
+              scrollToIndex: focusedOptionIndex,
+              width: width
+            })
+          );
         }
       );
     }
@@ -181,7 +174,7 @@ var VirtualizedSelect = function (_Component) {
         }
       };
 
-      return _react2.default.createElement(
+      return React.createElement(
         'div',
         babelHelpers.extends({
           className: className.join(' '),
@@ -192,17 +185,17 @@ var VirtualizedSelect = function (_Component) {
     }
   }]);
   return VirtualizedSelect;
-}(_react.Component);
+}(Component);
 
 VirtualizedSelect.propTypes = {
-  async: _react.PropTypes.bool,
-  maxHeight: _react.PropTypes.number.isRequired,
-  optionHeight: _react.PropTypes.oneOfType([_react.PropTypes.number, _react.PropTypes.func]).isRequired,
-  optionRenderer: _react.PropTypes.func
+  async: PropTypes.bool,
+  maxHeight: PropTypes.number.isRequired,
+  optionHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.func]).isRequired,
+  optionRenderer: PropTypes.func
 };
 VirtualizedSelect.defaultProps = {
   async: false,
   maxHeight: 200,
   optionHeight: 35
 };
-exports.default = VirtualizedSelect;
+export default VirtualizedSelect;
