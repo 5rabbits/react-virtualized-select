@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react'
+import { Creatable } from 'react-select'
 import VirtualizedSelect from './VirtualizedSelect'
 import styles from './VirtualizedSelect.example.css'
 
@@ -12,12 +13,20 @@ export default class VirtualizedSelectExample extends Component {
   constructor (props) {
     super(props)
 
+    const creatableOptions = [
+      { label: 'Blue', value: '#00F' },
+      { label: 'Green', value: '#0F0' },
+      { label: 'Red', value: '#F00' }
+    ]
+
     this.state = {
       clearable: true,
+      creatableOptions,
       disabled: false,
       githubUsers: [],
       multi: false,
       searchable: true,
+      selectedCreatable: null,
       selectedCity: null
     }
 
@@ -26,7 +35,7 @@ export default class VirtualizedSelectExample extends Component {
 
   render () {
     const { cityData, countryData, nameData } = this.props
-    const { clearable, disabled, githubUsers, multi, searchable, selectedCity, selectedCountry, selectedGithubUser, selectedName } = this.state
+    const { clearable, creatableOptions, disabled, githubUsers, multi, searchable, selectedCity, selectedCountry, selectedCreatable, selectedGithubUser, selectedName } = this.state
 
     return (
       <div>
@@ -165,6 +174,26 @@ export default class VirtualizedSelectExample extends Component {
           value={selectedGithubUser}
           valueKey='id'
         />
+
+        <h4 className={styles.header}>
+          Creatable Options
+        </h4>
+
+        <div className={styles.description}>
+          Displays a <code>Select.Creatable</code> component that enables users to create their own options.
+        </div>
+
+        <VirtualizedSelect
+          labelKey='label'
+          multi
+          onChange={(selectedCreatable) => this.setState({ selectedCreatable })}
+          optionHeight={40}
+          options={creatableOptions}
+          selectComponent={Creatable}
+          simpleValue
+          value={selectedCreatable}
+          valueKey='value'
+        />
       </div>
     )
   }
@@ -186,7 +215,7 @@ export default class VirtualizedSelectExample extends Component {
   }
 }
 
-function CountryOptionRenderer ({ focusedOption, focusedOptionIndex, focusOption, labelKey, option, options, selectValue, valueArray }) {
+function CountryOptionRenderer ({ focusedOption, focusedOptionIndex, focusOption, key, labelKey, option, options, selectValue, style, valueArray }) {
   const flagImageUrl = `https://rawgit.com/hjnilsson/country-flags/master/svg/${option.code.toLowerCase()}.svg`
 
   const classNames = [styles.countryOption]
@@ -200,8 +229,10 @@ function CountryOptionRenderer ({ focusedOption, focusedOptionIndex, focusOption
   return (
     <div
       className={classNames.join(' ')}
+      key={key}
       onClick={() => selectValue(option)}
       onMouseOver={() => focusOption(option)}
+      style={style}
     >
       <label className={styles.countryLabel}>
         {option.name}
@@ -214,14 +245,18 @@ function CountryOptionRenderer ({ focusedOption, focusedOptionIndex, focusOption
   )
 }
 
-function NameOptionRenderer ({ focusedOption, focusedOptionIndex, focusOption, labelKey, option, optionIndex, options, selectValue, valueArray }) {
+function NameOptionRenderer ({ focusedOption, focusedOptionIndex, focusOption, key, labelKey, option, optionIndex, options, selectValue, style, valueArray }) {
   const classNames = [styles.nameOption]
 
   if (option.type === 'header') {
     classNames.push(styles.nameHeader)
 
     return (
-      <div className={classNames.join(' ')}>
+      <div
+        className={classNames.join(' ')}
+        key={key}
+        style={style}
+      >
         {option.name}
       </div>
     )
@@ -236,8 +271,10 @@ function NameOptionRenderer ({ focusedOption, focusedOptionIndex, focusOption, l
     return (
       <div
         className={classNames.join(' ')}
+        key={key}
         onClick={() => selectValue(option)}
         onMouseOver={() => focusOption(option)}
+        style={style}
       >
         {option.name}
       </div>

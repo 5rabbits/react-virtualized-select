@@ -16,11 +16,17 @@ var _reactSelect = require('react-select');
 
 var _reactSelect2 = _interopRequireDefault(_reactSelect);
 
-var _reactVirtualized = require('react-virtualized');
-
 var _ScrollLock = require('./ScrollLock');
 
 var _ScrollLock2 = _interopRequireDefault(_ScrollLock);
+
+var _AutoSizer = require('react-virtualized/dist/commonjs/AutoSizer');
+
+var _AutoSizer2 = _interopRequireDefault(_AutoSizer);
+
+var _List = require('react-virtualized/dist/commonjs/List');
+
+var _List2 = _interopRequireDefault(_List);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -29,6 +35,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+// Import directly to avoid Webpack bundling the parts of react-virtualized that we are not using
+
 
 var VirtualizedSelect = function (_Component) {
   _inherits(VirtualizedSelect, _Component);
@@ -43,7 +52,7 @@ var VirtualizedSelect = function (_Component) {
     return _this;
   }
 
-  /** See VirtualScroll#recomputeRowHeights */
+  /** See List#recomputeRowHeights */
 
 
   _createClass(VirtualizedSelect, [{
@@ -63,10 +72,7 @@ var VirtualizedSelect = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
-      var async = this.props.async;
-
-
-      var SelectComponent = async ? _reactSelect2.default.Async : _reactSelect2.default;
+      var SelectComponent = this._getSelectComponent();
 
       return _react2.default.createElement(SelectComponent, _extends({}, this.props, {
         menuRenderer: this._renderMenu,
@@ -91,11 +97,13 @@ var VirtualizedSelect = function (_Component) {
       var optionRenderer = this.props.optionRenderer;
 
       var focusedOptionIndex = options.indexOf(focusedOption);
-      var height = this._calculateVirtualScrollHeight({ options: options });
+      var height = this._calculateListHeight({ options: options });
       var innerRowRenderer = optionRenderer || this._optionRenderer;
 
       function wrappedRowRenderer(_ref2) {
         var index = _ref2.index;
+        var key = _ref2.key;
+        var style = _ref2.style;
 
         var option = options[index];
 
@@ -103,24 +111,26 @@ var VirtualizedSelect = function (_Component) {
           focusedOption: focusedOption,
           focusedOptionIndex: focusedOptionIndex,
           focusOption: focusOption,
+          key: key,
           labelKey: labelKey,
           option: option,
           optionIndex: index,
           options: options,
           selectValue: selectValue,
+          style: style,
           valueArray: valueArray
         });
       }
 
       return _react2.default.createElement(
-        _reactVirtualized.AutoSizer,
+        _AutoSizer2.default,
         { disableHeight: true },
         function (_ref3) {
           var width = _ref3.width;
           return _react2.default.createElement(
             _ScrollLock2.default,
             null,
-            _react2.default.createElement(_reactVirtualized.VirtualScroll, {
+            _react2.default.createElement(_List2.default, {
               className: 'VirtualSelectGrid',
               height: height,
               ref: function ref(_ref5) {
@@ -142,8 +152,8 @@ var VirtualizedSelect = function (_Component) {
       );
     }
   }, {
-    key: '_calculateVirtualScrollHeight',
-    value: function _calculateVirtualScrollHeight(_ref6) {
+    key: '_calculateListHeight',
+    value: function _calculateListHeight(_ref6) {
       var options = _ref6.options;
       var maxHeight = this.props.maxHeight;
 
@@ -172,15 +182,31 @@ var VirtualizedSelect = function (_Component) {
       return optionHeight instanceof Function ? optionHeight({ option: option }) : optionHeight;
     }
   }, {
+    key: '_getSelectComponent',
+    value: function _getSelectComponent() {
+      var _props = this.props;
+      var async = _props.async;
+      var selectComponent = _props.selectComponent;
+
+
+      if (selectComponent) {
+        return selectComponent;
+      } else if (async) {
+        return _reactSelect2.default.Async;
+      } else {
+        return _reactSelect2.default;
+      }
+    }
+  }, {
     key: '_optionRenderer',
     value: function _optionRenderer(_ref8) {
       var focusedOption = _ref8.focusedOption;
       var focusOption = _ref8.focusOption;
+      var key = _ref8.key;
       var labelKey = _ref8.labelKey;
       var option = _ref8.option;
       var selectValue = _ref8.selectValue;
-
-      var height = this._getOptionHeight({ option: option });
+      var style = _ref8.style;
 
       var className = ['VirtualizedSelectOption'];
 
@@ -205,7 +231,8 @@ var VirtualizedSelect = function (_Component) {
         'div',
         _extends({
           className: className.join(' '),
-          style: { height: height }
+          key: key,
+          style: style
         }, events),
         option[labelKey]
       );
@@ -219,7 +246,8 @@ VirtualizedSelect.propTypes = {
   async: _react.PropTypes.bool,
   maxHeight: _react.PropTypes.number.isRequired,
   optionHeight: _react.PropTypes.oneOfType([_react.PropTypes.number, _react.PropTypes.func]).isRequired,
-  optionRenderer: _react.PropTypes.func
+  optionRenderer: _react.PropTypes.func,
+  selectComponent: _react.PropTypes.func
 };
 VirtualizedSelect.defaultProps = {
   async: false,

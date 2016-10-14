@@ -24,7 +24,9 @@ For example:
 
 ```js
 // Make sure to import default styles.
-// This only needs to be done once; probably during your application's bootstrapping process.
+// This only needs to be done once; probably during bootstrapping process.
+import 'react-select/dist/react-select.css'
+import 'react-virtualized/styles.css'
 import 'react-virtualized-select/styles.css'
 
 // Then import the virtualized Select HOC
@@ -34,7 +36,10 @@ import VirtualizedSelect from 'react-virtualized-select'
 Alternately you can load a global-friendly UMD build:
 
 ```html
+<link rel="stylesheet" href="path-to-react-select/dist/react-select.css">
+<link rel="stylesheet" href="path-to-react-virtualized/styles.css">
 <link rel="stylesheet" href="path-to-react-virtualized-select/styles.css">
+
 <script src="path-to-react-virtualized-select/dist/umd/react-virtualized-select.js"></script>
 ```
 
@@ -45,8 +50,9 @@ _react-select-virtualized_ works just like _react-select_. You pass it an array 
 ```js
 import React, { Component } from 'react'
 import VirtualizedSelect from 'react-virtualized-select'
-import 'react-virtualized/styles.css'
+
 import 'react-select/dist/react-select.css'
+import 'react-virtualized/styles.css'
 import 'react-virtualized-select/styles.css'
 
 class MySelect extends Component {
@@ -85,6 +91,7 @@ The additional parameters introduced by _react-select-virtualized_ are optional.
 | maxHeight | `PropTypes.number` | Max height of options menu; defaults to 200 pixels. |
 | optionHeight | `PropTypes.number` or `PropTypes.func` | Option height (defaults to 35 pixels). Dynamic height can be supported via a function with the signature `({ option: Object }): number` |
 | optionRenderer | `PropTypes.func` | Custom option renderer; (see below for signature). |
+| selectComponent | `PropTypes.func` | Use a sepecific select HOC (eg `Select.Creatable`); defaults to `Select` (or `Select.Async` if `async` flag is true). |
 
 ## Custom Option Renderer
 
